@@ -4,6 +4,7 @@ from services.gerar_contrato import gerar_contrato
 from database import criar_tabela, salvar_contrato, listar_contratos
 from utils.formatacao import valor_por_extenso, data_por_extenso, buscar_cep
 from utils.formatacao import formatar_moeda
+from utils.formatacao import formatar_nome, formatar_cpf, formatar_rg
 
 criar_tabela()
 
@@ -143,6 +144,9 @@ if menu == "Novo Contrato":
 
             duracao = (data_fim - data_inicio).days
             valor_extenso = valor_por_extenso(valor)
+            nome = formatar_nome(nome)
+            cpf = formatar_cpf(cpf)
+            rg = formatar_rg(rg)
 
             dados = {
                 "locatario_nome": nome,
@@ -168,6 +172,7 @@ if menu == "Novo Contrato":
                 "tipo_combustivel": tipo_combustivel,
                 "nivel_combustivel": nivel_combustivel,
                 "km_atual": km_atual,
+                
             }
 
             try:
