@@ -3,6 +3,7 @@ from datetime import date
 from services.gerar_contrato import gerar_contrato
 from database import criar_tabela, salvar_contrato, listar_contratos
 from utils.formatacao import valor_por_extenso, data_por_extenso, buscar_cep
+from utils.formatacao import formatar_moeda
 
 criar_tabela()
 
@@ -154,7 +155,7 @@ if menu == "Novo Contrato":
                 "locatario_cep": cep,
                 "veiculo_modelo": veiculo,
                 "veiculo_placa": placa,
-                "valor": valor,
+                "valor": formatar_moeda(valor),
                 "valor_extenso": valor_extenso,
                 "duracao": f"{duracao} dias",
                 "data_inicio": data_inicio.strftime("%d/%m/%Y"),

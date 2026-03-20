@@ -2,3 +2,5 @@ streamlit
 requests
 num2words
 docxtpl
+python-docx
+pdfkit
