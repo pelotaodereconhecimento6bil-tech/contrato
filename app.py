@@ -33,9 +33,6 @@ if menu == "Novo Contrato":
     with col2:
         orgao_emissor = st.text_input("Órgão emissor (ex: SSP)")
 
-        # =========================
-        # ENDEREÇO COM CEP
-        # =========================
         st.markdown("#### 📍 Endereço")
 
         cep = st.text_input("CEP")
@@ -45,13 +42,11 @@ if menu == "Novo Contrato":
         with col_btn1:
             buscar = st.button("🔍 Buscar CEP")
 
-        # estado inicial
         if "endereco_auto" not in st.session_state:
             st.session_state.endereco_auto = ""
             st.session_state.cidade_auto = ""
             st.session_state.estado_auto = ""
 
-        # busca CEP
         if buscar:
             with st.spinner("Buscando CEP..."):
                 dados_cep = buscar_cep(cep)
@@ -64,7 +59,6 @@ if menu == "Novo Contrato":
                 else:
                     st.warning("CEP não encontrado!")
 
-        # campos editáveis
         endereco = st.text_input("Endereço", value=st.session_state.endereco_auto)
 
         col_end1, col_end2 = st.columns(2)
@@ -121,9 +115,6 @@ if menu == "Novo Contrato":
 
     st.divider()
 
-    # =========================
-    # BOTÃO
-    # =========================
     col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
 
     with col_btn2:
@@ -144,9 +135,6 @@ if menu == "Novo Contrato":
             placa = placa.upper()
             estado = estado.upper()
             orgao_emissor = orgao_emissor.upper()
-
-            # Se quiser permitir sem número, usa isso:
-            # numero = numero if numero else "S/N"
 
             endereco_completo = f"{endereco}, {numero}"
             if complemento:
@@ -182,16 +170,17 @@ if menu == "Novo Contrato":
             }
 
             try:
-                pdf = gerar_contrato(dados)
+                arquivo = gerar_contrato(dados)
+
                 salvar_contrato(nome, cpf, veiculo, valor, str(date.today()))
 
                 st.success("✅ Contrato gerado com sucesso!")
 
-                with open(pdf, "rb") as f:
+                with open(arquivo, "rb") as f:
                     st.download_button(
-                        "📥 Baixar contrato",
+                        "📥 Baixar contrato (.docx)",
                         f,
-                        file_name=pdf,
+                        file_name=arquivo,
                         use_container_width=True
                     )
 

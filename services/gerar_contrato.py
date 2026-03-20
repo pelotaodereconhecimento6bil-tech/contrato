@@ -1,39 +1,20 @@
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
+from docxtpl import DocxTemplate
 import os
 
 def gerar_contrato(dados):
-    pdf = f"contrato_{dados['locatario_nome']}.pdf"
+    # caminho do template
+    template_path = "contrato_template.docx"
 
-    c = canvas.Canvas(pdf, pagesize=A4)
+    # nome do arquivo final
+    nome_arquivo = f"contrato_{dados['locatario_nome']}.docx"
 
-    texto = c.beginText(40, 800)
-    texto.setFont("Helvetica", 11)
+    # carrega o modelo
+    doc = DocxTemplate(template_path)
 
-    linhas = [
-        "CONTRATO DE LOCAÇÃO DE VEÍCULO",
-        "",
-        f"Locatário: {dados['locatario_nome']}",
-        f"CPF: {dados['locatario_cpf']}",
-        f"RG: {dados['locatario_rg']}",
-        f"Endereço: {dados['locatario_endereco']}",
-        "",
-        f"Veículo: {dados['veiculo_modelo']}",
-        f"Placa: {dados['veiculo_placa']}",
-        "",
-        f"Valor: R$ {dados['valor']} ({dados['valor_extenso']})",
-        f"Duração: {dados['duracao']}",
-        "",
-        f"Início: {dados['data_inicio']}",
-        f"Fim: {dados['data_fim']}",
-        "",
-        f"Data: {dados['data_assinatura_extenso']}",
-    ]
+    # substitui os {{campos}} pelos dados
+    doc.render(dados)
 
-    for linha in linhas:
-        texto.textLine(linha)
+    # salva o contrato pronto
+    doc.save(nome_arquivo)
 
-    c.drawText(texto)
-    c.save()
-
-    return pdf
+    return nome_arquivo
