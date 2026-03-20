@@ -1,33 +1,32 @@
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
+from docxtpl import DocxTemplate
+import os
+import re
 
 def gerar_contrato(dados):
-    nome_pdf = f"contrato_{dados['locatario_nome']}.pdf"
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    c = canvas.Canvas(nome_pdf, pagesize=A4)
-    texto = c.beginText(40, 800)
-    texto.setFont("Helvetica", 10)
+    # caminho do template
+    template_path = os.path.join(BASE_DIR, "..", "contrato_template.docx")
 
-    linhas = [
-        "CONTRATO DE LOCAÇÃO DE VEÍCULO",
-        "",
-        f"LOCATÁRIO: {dados['locatario_nome']}",
-        f"CPF: {dados['locatario_cpf']}",
-        "",
-        "CLÁUSULA 1ª - DO OBJETO",
-        f"Veículo: {dados['veiculo_modelo']} - {dados['veiculo_placa']}",
-        "",
-        f"Valor: R$ {dados['valor']} ({dados['valor_extenso']})",
-        "",
-        f"Período: {dados['data_inicio']} até {dados['data_fim']}",
-        "",
-        "Demais cláusulas conforme contrato padrão.",
-    ]
+    # =========================
+    # LIMPAR NOME DO ARQUIVO
+    # =========================
+    nome_limpo = dados['locatario_nome']
 
-    for linha in linhas:
-        texto.textLine(linha)
+    # remove caracteres especiais
+    nome_limpo = re.sub(r"[^\w\s]", "", nome_limpo)
 
-    c.drawText(texto)
-    c.save()
+    # substitui espaços por _
+    nome_limpo = nome_limpo.replace(" ", "_")
 
-    return nome_pdf
+    # nome final do arquivo
+    nome_arquivo = f"contrato_{nome_limpo}.docx"
+
+    # =========================
+    # GERAR DOCUMENTO
+    # =========================
+    doc = DocxTemplate(template_path)
+    doc.render(dados)
+    doc.save(nome_arquivo)
+
+    return nome_arquivo

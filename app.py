@@ -2,9 +2,16 @@ import streamlit as st
 from datetime import date
 from services.gerar_contrato import gerar_contrato
 from database import criar_tabela, salvar_contrato, listar_contratos
-from utils.formatacao import valor_por_extenso, data_por_extenso, buscar_cep
-from utils.formatacao import formatar_moeda
-from utils.formatacao import formatar_nome, formatar_cpf, formatar_rg
+
+from utils.formatacao import (
+    valor_por_extenso,
+    data_por_extenso,
+    buscar_cep,
+    formatar_nome,
+    formatar_cpf,
+    formatar_rg,
+    formatar_moeda
+)
 
 criar_tabela()
 
@@ -134,6 +141,13 @@ if menu == "Novo Contrato":
             st.error("Informe o número do endereço!")
 
         else:
+            # =========================
+            # FORMATAÇÕES
+            # =========================
+            nome = formatar_nome(nome)
+            cpf = formatar_cpf(cpf)
+            rg = formatar_rg(rg)
+
             placa = placa.upper()
             estado = estado.upper()
             orgao_emissor = orgao_emissor.upper()
@@ -144,10 +158,10 @@ if menu == "Novo Contrato":
 
             duracao = (data_fim - data_inicio).days
             valor_extenso = valor_por_extenso(valor)
-            nome = formatar_nome(nome)
-            cpf = formatar_cpf(cpf)
-            rg = formatar_rg(rg)
 
+            # =========================
+            # DADOS DO CONTRATO
+            # =========================
             dados = {
                 "locatario_nome": nome,
                 "locatario_cpf": cpf,
@@ -172,7 +186,6 @@ if menu == "Novo Contrato":
                 "tipo_combustivel": tipo_combustivel,
                 "nivel_combustivel": nivel_combustivel,
                 "km_atual": km_atual,
-                
             }
 
             try:
@@ -184,7 +197,7 @@ if menu == "Novo Contrato":
 
                 with open(arquivo, "rb") as f:
                     st.download_button(
-                        "📥 Baixar contrato (.docx)",
+                        "📄 Baixar contrato (Word)",
                         f,
                         file_name=arquivo,
                         use_container_width=True
