@@ -1,4 +1,5 @@
 streamlit
-docxtpl
-python-docx
+reportlab
 requests
+num2words
+docxtpl
